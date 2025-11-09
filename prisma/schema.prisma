@@ -21,3 +21,14 @@ model AppConfig {
   createdAt DateTime @default(now())
 }
 
+model Memory {
+  id          String   @id @default(cuid())
+  title       String? 
+  thoughts    String  
+  mood        String?  
+  photos      String[] @default([])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+

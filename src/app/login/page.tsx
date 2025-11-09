@@ -25,27 +25,35 @@ function LoginForm() {
   });
 
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        mutation.mutate(password);
-      }}
-      className="mx-auto mt-40 flex w-80 flex-col gap-4"
-    >
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Nhập mật khẩu"
-        className="rounded border p-2"
-      />
-      <button
-        type="submit"
-        disabled={mutation.isPending}
-        className="rounded bg-blue-500 p-2 text-white"
+    <div className="flex min-h-screen flex-col items-center justify-center bg-linear-to-b from-pink-100 via-purple-100 to-blue-100">
+      <div className="mb-10 flex flex-col items-center justify-center">
+        <h1 className="text-2xl text-pink-400">📖 My Diary ✨</h1>
+        <p className="mt-2 text-pink-400">
+          Capture your precious memories, thoughts, and moments in your personal digital diary ✨
+        </p>{" "}
+      </div>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          mutation.mutate(password);
+        }}
+        className="flex w-80 flex-col gap-4 rounded-2xl bg-white/70 p-6 shadow-lg backdrop-blur-md"
       >
-        {mutation.isPending ? "Đang đăng nhập..." : "Đăng nhập"}
-      </button>
-    </form>
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Password"
+          className="rounded border border-pink-400 p-2 text-red-800 outline-none focus:ring-2 focus:ring-pink-400"
+        />
+        <button
+          type="submit"
+          disabled={mutation.isPending}
+          className="rounded bg-gradient-to-r from-pink-500 to-purple-500 p-2 font-medium text-white shadow-md hover:cursor-pointer hover:opacity-90"
+        >
+          {mutation.isPending ? "Logging in..." : "Login"}
+        </button>
+      </form>
+    </div>
   );
 }
