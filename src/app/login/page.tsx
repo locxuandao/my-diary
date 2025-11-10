@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useMutation, QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import api from "@/lib/axios";
+import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +23,11 @@ function LoginForm() {
     mutationFn: (password: string) => api.post("/api/auth", { password }).then((res) => res.data),
     onSuccess: (data) => {
       if (data.success) window.location.href = "/";
+      toast.success("Login successful");
+    },
+    onError: () => {
+      toast.error("ERROR");
+      setPassword("");
     },
   });
 
@@ -30,7 +37,7 @@ function LoginForm() {
         <h1 className="text-2xl text-pink-400">📖 My Diary ✨</h1>
         <p className="mt-2 text-pink-400">
           Capture your precious memories, thoughts, and moments in your personal digital diary ✨
-        </p>{" "}
+        </p>
       </div>
       <form
         onSubmit={(e) => {
@@ -39,12 +46,12 @@ function LoginForm() {
         }}
         className="flex w-80 flex-col gap-4 rounded-2xl bg-white/70 p-6 shadow-lg backdrop-blur-md"
       >
-        <input
+        <Input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
-          className="rounded border border-pink-400 p-2 text-red-800 outline-none focus:ring-2 focus:ring-pink-400"
+          className="min-h-[45px] rounded border border-pink-400 p-2 text-red-800 outline-none focus:ring-2 focus:ring-pink-400"
         />
         <button
           type="submit"

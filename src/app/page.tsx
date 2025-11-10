@@ -4,7 +4,10 @@ import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { CreateMemoryModal } from "./components/CreateMemoryModal";
 import { Input } from "@/components/ui/input";
-import { Plus } from "lucide-react";
+import { NotebookPen } from "lucide-react";
+import { useMemories } from "@/apis/memories/queries";
+import { Pagination } from "./components/Pagination";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const queryClient = new QueryClient();
 
@@ -18,6 +21,10 @@ export default function HomePageWrapper() {
 
 function HomePage() {
   const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
+
+  const { data: memories, isLoading } = useMemories({ page });
+  console.log(memories);
 
   return (
     <main className="flex min-h-screen flex-col items-center bg-gradient-to-b from-pink-100 via-purple-100 to-blue-100 px-4 py-10 text-center">
@@ -39,20 +46,40 @@ function HomePage() {
         <CreateMemoryModal />
       </div>
 
-      <section className="mt-24 flex flex-col items-center">
-        <img
-          src="https://cdn-icons-png.flaticon.com/512/3373/3373034.png"
-          alt="diary icon"
-          className="mb-4 h-16 w-16"
-        />
-        <h2 className="text-xl font-semibold text-purple-700">Start your diary journey</h2>
-        <p className="mt-1 mb-6 text-sm text-purple-600 sm:text-base">
-          Create your first memory and begin documenting your beautiful journey
-        </p>
-        <button className="flex h-8 items-center gap-2 rounded-lg bg-gradient-to-r from-pink-500 to-purple-500 px-4 py-2 font-medium text-white shadow-md transition hover:cursor-pointer hover:opacity-90">
-          <Plus size={16} /> New Memory
-        </button>
-      </section>
+      {isLoading ? (
+        Array.from({ length: 3 }).map((_, idx) => (
+          <div key={idx} className="mb-4 rounded border p-4">
+            <Skeleton className="mb-2 h-5 w-3/4" />
+            <Skeleton className="h-4 w-full" />
+          </div>
+        ))
+      ) : (memories?.data?.length ?? 0) > 0 ? (
+        <>
+          {memories?.data.map((memory) => (
+            <div key={memory.id} className="mb-4 rounded border p-2">
+              <h3>{memory.title || "No title"}</h3>
+              <p>{memory.thoughts}</p>
+            </div>
+          ))}
+
+          {memories?.pagination && (
+            <Pagination
+              page={memories.pagination.currentPage}
+              totalPages={memories.pagination.totalPages}
+              onPageChange={(newPage) => setPage(newPage)}
+            />
+          )}
+        </>
+      ) : (
+        <section className="mt-24 flex flex-col items-center">
+          <NotebookPen height={80} width={80} className="text-pink-800" />
+          <h2 className="text-xl font-semibold text-purple-700">Start your diary journey</h2>
+          <p className="mt-1 mb-6 text-sm text-purple-600 sm:text-base">
+            Create your first memory and begin documenting your beautiful journey
+          </p>
+          <CreateMemoryModal />
+        </section>
+      )}
     </main>
   );
 }

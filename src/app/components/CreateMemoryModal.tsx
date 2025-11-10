@@ -19,6 +19,7 @@ import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { Plus, Upload } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import { toast } from "sonner";
 
 const moods = ["😊", "😢", "😍", "🥳", "😔", "😂", "🙂", "🤩"];
 
@@ -45,9 +46,11 @@ export function CreateMemoryModal() {
       setSelectedMood(null);
       setPhotos([]);
       setOpen(false);
+      toast.success("Add Memory Success");
     },
     onError: (err) => {
       console.error(err);
+      toast.error("ERROR");
     },
   });
 
@@ -170,7 +173,7 @@ export function CreateMemoryModal() {
           <Button
             className="bg-gradient-to-r from-pink-500 to-purple-500 text-white hover:cursor-pointer"
             onClick={handleSaveMemory}
-            disabled={mutation.isPending}
+            disabled={mutation.isPending || !thoughts}
           >
             {mutation.isPending ? "Saving..." : "Save Memory"}
           </Button>
