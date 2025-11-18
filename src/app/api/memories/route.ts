@@ -59,3 +59,25 @@ export async function POST(req: Request) {
 
   return NextResponse.json(memory);
 }
+
+export async function DELETE(req: Request) {
+  const { searchParams } = new URL(req.url);
+  const id = searchParams.get("id");
+
+  if (!id) {
+    return NextResponse.json({ error: "Memory ID is required" }, { status: 400 });
+  }
+
+  try {
+    const deleted = await prisma.memory.delete({
+      where: { id },
+    });
+
+    return NextResponse.json({
+      message: "Memory deleted successfully",
+      data: deleted,
+    });
+  } catch (error) {
+    return NextResponse.json({ error: "Memory not found or already deleted" }, { status: 404 });
+  }
+}

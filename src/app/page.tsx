@@ -1,13 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider, useMutation } from "@tanstack/react-query";
 import { CreateMemoryModal } from "./components/CreateMemoryModal";
 import { Input } from "@/components/ui/input";
 import { NotebookPen } from "lucide-react";
-import { useMemories } from "@/apis/memories/queries";
+import { useDeleteMemory, useMemories } from "@/apis/memories/queries";
 import { Pagination } from "./components/Pagination";
 import { Skeleton } from "@/components/ui/skeleton";
+import { MemoryCard } from "./components/MemoryCard";
+import { deleteMemori } from "@/apis/memories/request";
+import { useDebounce } from "@/hooks/useDebounce";
 
 const queryClient = new QueryClient();
 
@@ -22,12 +25,20 @@ export default function HomePageWrapper() {
 function HomePage() {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
+  const debouncedSearch = useDebounce(search, 500);
 
-  const { data: memories, isLoading } = useMemories({ page });
-  console.log(memories);
+  const { data: memories, isLoading } = useMemories({
+    page,
+    query: debouncedSearch,
+  });
+  const deleteMutation = useDeleteMemory();
+
+  const handleDeleteMemory = (id: string) => {
+    deleteMutation.mutate(id);
+  };
 
   return (
-    <main className="flex min-h-screen flex-col items-center bg-gradient-to-b from-pink-100 via-purple-100 to-blue-100 px-4 py-10 text-center">
+    <main className="flex min-h-screen flex-col items-center gap-4 bg-gradient-to-b from-pink-100 via-purple-100 to-blue-100 px-4 py-10 text-center">
       <header>
         <h1 className="text-2xl text-pink-400">📖 My Diary ✨</h1>
         <p className="mt-2 text-sm text-purple-700 sm:text-base">
@@ -35,11 +46,14 @@ function HomePage() {
         </p>
       </header>
 
-      <div className="mt-8 flex min-w-[700px] items-center justify-between gap-4">
+      <div className="mt-8 flex min-w-[600px] items-center justify-between">
         <Input
           type="text"
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) => {
+            setSearch(e.target.value);
+            setPage(1);
+          }}
           placeholder="Search your memories..."
           className="h-8 max-w-[420px] border-pink-300"
         />
@@ -56,10 +70,16 @@ function HomePage() {
       ) : (memories?.data?.length ?? 0) > 0 ? (
         <>
           {memories?.data.map((memory) => (
-            <div key={memory.id} className="mb-4 rounded border p-2">
-              <h3>{memory.title || "No title"}</h3>
-              <p>{memory.thoughts}</p>
-            </div>
+            <MemoryCard
+              createAt={new Date(memory.createdAt)}
+              mood={memory.mood || "🙂"}
+              photos={memory.photos || []}
+              thoughts={memory.thoughts}
+              title={memory.title || ""}
+              key={memory.id}
+              onDelete={() => handleDeleteMemory(memory.id)}
+              id={memory.id}
+            />
           ))}
 
           {memories?.pagination && (

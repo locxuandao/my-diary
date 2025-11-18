@@ -88,7 +88,7 @@ export function CreateMemoryModal() {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="max-w-md bg-pink-50">
+      <DialogContent className="overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-purple-700">
             🌟 Create a New Memory
@@ -104,6 +104,7 @@ export function CreateMemoryModal() {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="What happened today?"
+            className="max-h-[85vh] max-w-[460px] overflow-x-auto"
           />
         </div>
 
@@ -113,6 +114,7 @@ export function CreateMemoryModal() {
             value={thoughts}
             onChange={(e) => setThoughts(e.target.value)}
             placeholder="Write about your day, feelings, or anything special..."
+            className="max-h-[130px] max-w-[460px] overflow-auto"
           />
         </div>
 

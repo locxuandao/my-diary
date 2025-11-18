@@ -13,7 +13,7 @@ interface PaginationProps {
 
 export function Pagination({ page, totalPages, onPageChange }: PaginationProps) {
   return (
-    <div className="flex items-center justify-between py-4">
+    <div className="flex items-center justify-between gap-1 py-4">
       <Button
         variant="outline"
         size="sm"
