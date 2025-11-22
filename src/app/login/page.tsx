@@ -50,7 +50,7 @@ function LoginForm() {
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
+          placeholder="26052003"
           className="min-h-[45px] rounded border border-pink-400 p-2 text-red-800 outline-none focus:ring-2 focus:ring-pink-400"
         />
         <button
