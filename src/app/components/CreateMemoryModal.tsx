@@ -139,11 +139,13 @@ export function CreateMemoryModal() {
         </div>
 
         {/* Photos */}
+        {/* Photos */}
         <div className="mt-5">
           <Label className="text-sm text-purple-700">Photos</Label>
-          <div
-            className="mt-2 flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-pink-300 py-6 text-center text-pink-500 transition hover:bg-pink-50"
-            onClick={() => document.getElementById("file-input")?.click()}
+
+          <label
+            htmlFor="file-input"
+            className="mt-2 flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-pink-300 py-6 text-center text-pink-500 transition hover:bg-pink-50 active:bg-pink-100"
           >
             <Upload className="mb-1 h-6 w-6" />
             <span className="text-sm">Tap to upload</span>
@@ -154,15 +156,16 @@ export function CreateMemoryModal() {
                 </li>
               ))}
             </ul>
-            <input
-              id="file-input"
-              type="file"
-              className="hidden"
-              accept=".png, .jpg, .jpeg"
-              multiple
-              onChange={handleFileChange}
-            />
-          </div>
+          </label>
+
+          <input
+            id="file-input"
+            type="file"
+            className="hidden"
+            accept=".png, .jpg, .jpeg"
+            multiple
+            onChange={handleFileChange}
+          />
         </div>
 
         {/* Footer */}
