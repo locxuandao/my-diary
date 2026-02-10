@@ -69,7 +69,7 @@ function LoginForm() {
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="Enter your password"
+          placeholder="Enter my password : 26052003"
           className="h-11 rounded-md border border-pink-300 text-center text-purple-900 placeholder:text-pink-400 focus:ring-2 focus:ring-pink-400"
         />
 
