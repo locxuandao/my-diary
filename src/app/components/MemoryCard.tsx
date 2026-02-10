@@ -37,16 +37,15 @@ export const MemoryCard = (props: Props) => {
   return (
     <Card
       className={cn(
-        "relative w-full max-w-xl rounded-2xl border border-pink-200 bg-pink-50 p-5 shadow-sm"
+        "relative w-full max-w-md rounded-2xl border border-pink-200 bg-gradient-to-b from-pink-50 to-white p-4 shadow-sm transition hover:shadow-md sm:max-w-xl sm:p-5"
       )}
     >
-      <div className="mb-3 flex justify-between">
+      {/* Header */}
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2 font-medium text-pink-600">
           <Heart className="h-4 w-4 fill-pink-600" />
-          <p>
-            {format(new Date(createAt), "EEEE, MMMM dd, yyyy", {
-              locale: enUS,
-            })}
+          <p className="text-xs sm:text-sm">
+            {format(new Date(createAt), "EEEE, MMMM dd, yyyy", { locale: enUS })}
           </p>
         </div>
 
@@ -61,25 +60,29 @@ export const MemoryCard = (props: Props) => {
                 <Trash2 className="h-4 w-4" />
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[400px]">
+            <DialogContent className="w-[90vw] max-w-[350px] rounded-xl p-5 sm:p-6">
               <DialogHeader>
-                <DialogTitle>Confirm Delete</DialogTitle>
-                <DialogDescription>Are you sure you want to clear memory?</DialogDescription>
+                <DialogTitle className="text-base text-purple-700 sm:text-lg">
+                  Confirm Delete
+                </DialogTitle>
+                <DialogDescription className="text-sm text-gray-600">
+                  Are you sure you want to delete this memory? This action cannot be undone.
+                </DialogDescription>
               </DialogHeader>
-              <DialogFooter className="mt-4 flex justify-end gap-2">
+              <DialogFooter className="mt-5 flex flex-col gap-2 sm:flex-row sm:justify-end">
                 <Button
                   variant="outline"
                   onClick={() => setOpen(false)}
-                  className="border-gray-300"
+                  className="border-gray-300 text-gray-700 hover:bg-gray-100"
                 >
-                  Cancle
+                  Cancel
                 </Button>
                 <Button
                   onClick={() => {
                     onDelete?.();
                     setOpen(false);
                   }}
-                  className="bg-gradient-to-r from-pink-500 to-purple-500 text-white"
+                  className="bg-gradient-to-r from-pink-500 to-purple-500 text-white hover:opacity-90"
                 >
                   Confirm
                 </Button>
@@ -89,36 +92,41 @@ export const MemoryCard = (props: Props) => {
         )}
       </div>
 
+      {/* Content */}
       <div className="mb-4 flex flex-col items-start space-y-1">
-        <p className="max-w-full text-sm font-semibold wrap-break-word whitespace-pre-wrap text-purple-700">
-          {title}
-        </p>
+        {title && (
+          <p className="max-w-full text-sm font-semibold break-words text-purple-700">{title}</p>
+        )}
         <p
           onClick={() => router.push(`/memories/${id}`)}
-          className="line-clamp-3 max-w-full wrap-break-word whitespace-pre-wrap text-gray-700 hover:cursor-pointer hover:underline"
+          className="line-clamp-3 max-w-full text-sm break-words text-gray-700 hover:cursor-pointer hover:underline"
         >
           {thoughts}
         </p>
       </div>
 
+      {/* Photos */}
       {photos && photos.length > 0 && (
-        <div className="mb-3 flex flex-wrap gap-3">
+        <div className="mb-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
           {photos.map((url, idx) => (
-            <div key={idx} className="relative overflow-hidden rounded-xl shadow-md">
+            <div
+              key={idx}
+              className="relative aspect-square overflow-hidden rounded-xl border border-pink-100 shadow-sm"
+            >
               <Image
                 src={url}
                 alt={`memory-photo-${idx}`}
-                width={400}
-                height={200}
-                className="rounded-xl object-cover"
+                fill
+                className="object-cover transition hover:scale-105"
               />
             </div>
           ))}
         </div>
       )}
 
+      {/* Footer */}
       <div className="flex items-center justify-start">
-        <span className="text-2xl">{mood}</span>
+        <span className="text-2xl sm:text-3xl">{mood}</span>
       </div>
     </Card>
   );
